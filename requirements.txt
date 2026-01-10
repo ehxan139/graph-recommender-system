@@ -1,0 +1,24 @@
+torch>=2.0.0
+numpy>=1.21.0
+scipy>=1.7.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+pydantic>=2.0.0
+python-multipart>=0.0.6
+redis>=4.5.0
+pyyaml>=6.0
+tqdm>=4.65.0
+matplotlib>=3.5.0
+seaborn>=0.12.0
+jupyter>=1.0.0
+
+# Optional: For production deployment
+gunicorn>=21.2.0
+prometheus-client>=0.17.0
+structlog>=23.1.0
+
+# Optional: For advanced features
+torch-geometric>=2.3.0  # For additional GNN layers
+dgl>=1.1.0  # Deep Graph Library (alternative backend)
