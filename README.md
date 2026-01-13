@@ -7,7 +7,7 @@ Production-ready graph neural network recommendation engine built with PyTorch. 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🎯 Business Impact
+## Business Impact
 
 Graph-based recommendation systems deliver significant business value across e-commerce, streaming, and social platforms:
 
@@ -97,7 +97,7 @@ Tested on Amazon product reviews dataset (32K users, 18K items, 430K interaction
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -171,7 +171,7 @@ curl -X POST "http://localhost:8000/recommend" \
 
 ---
 
-## 📊 Models
+## Models
 
 ### LightGCN (Recommended)
 
@@ -219,7 +219,7 @@ NGCF(
 
 ---
 
-## 🛠️ Production Deployment
+## Production Deployment
 
 ### Docker Deployment
 
@@ -299,7 +299,7 @@ aws ecs create-service \
 
 ---
 
-## 📈 Performance Optimization
+## Performance Optimization
 
 ### Scaling Guidelines
 
@@ -337,7 +337,7 @@ aws ecs create-service \
    # Redis cache for popular items
    import redis
    r = redis.Redis()
-   
+
    # Cache recommendations for 1 hour
    r.setex(f"recs:user:{user_id}", 3600, recommendations)
    ```
@@ -362,7 +362,7 @@ aws ecs create-service \
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 graph-recommender-system/
@@ -403,7 +403,7 @@ graph-recommender-system/
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 ### Model Configuration
 
@@ -414,19 +414,19 @@ model:
   embedding_size: 64
   n_layers: 3
   reg_weight: 0.0001
-  
+
 training:
   learning_rate: 0.001
   batch_size: 1024
   epochs: 100
   early_stopping_patience: 10
-  
+
 data:
   min_user_interactions: 5
   min_item_interactions: 5
   test_ratio: 0.2
   val_ratio: 0.1
-  
+
 serving:
   cache_ttl: 3600  # seconds
   max_batch_size: 1000
@@ -435,7 +435,7 @@ serving:
 
 ---
 
-## 📚 References
+## References
 
 **Research Papers**:
 
@@ -473,7 +473,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🎓 Author
+## Author
 
 Built by a data scientist specializing in recommendation systems, graph neural networks, and production ML systems. Part of a professional portfolio showcasing end-to-end ML engineering capabilities.
 
@@ -495,7 +495,7 @@ For questions, issues, or feature requests:
 
 ---
 
-## 🎯 Roadmap
+## Roadmap
 
 **Upcoming Features**:
 - [ ] Real-time model updates with online learning
@@ -508,4 +508,4 @@ For questions, issues, or feature requests:
 
 ---
 
-**Star ⭐ this repository if you find it useful!**
+**Star this repository if you find it useful!**

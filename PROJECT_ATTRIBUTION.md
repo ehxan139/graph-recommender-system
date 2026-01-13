@@ -4,7 +4,7 @@ This project was developed as part of a professional portfolio showcasing produc
 
 ## What's Original vs. Academic Source
 
-### ✅ **Created for This Project** (100% NEW CODE)
+### **Created for This Project** (100% NEW CODE)
 
 All code in this repository was written from scratch for production use:
 
@@ -35,7 +35,7 @@ All code in this repository was written from scratch for production use:
    - ROI calculations and performance benchmarks
    - API documentation and deployment guides
 
-### 📚 **Inspired by Academic Research**
+### **Inspired by Academic Research**
 
 While the **implementations are 100% original**, the model architectures are based on:
 

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # FastAPI application
@@ -17,7 +17,7 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
-    
+
   # Redis for caching
   redis:
     image: redis:7-alpine
@@ -26,7 +26,7 @@ services:
     volumes:
       - redis_data:/data
     restart: unless-stopped
-    
+
   # Nginx for load balancing
   nginx:
     image: nginx:alpine

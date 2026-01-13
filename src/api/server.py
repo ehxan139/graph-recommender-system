@@ -93,21 +93,21 @@ START_TIME = time.time()
 async def startup_event():
     """Load models on startup."""
     logger.info("Starting Graph Recommendation API...")
-    
+
     # Load default models (in production, load from model registry/S3)
     try:
         # Check if model files exist
         lightgcn_path = "models/lightgcn_checkpoint.pt"
         ngcf_path = "models/ngcf_checkpoint.pt"
-        
+
         if os.path.exists(lightgcn_path):
             MODEL_REGISTRY['lightgcn'] = load_lightgcn(lightgcn_path)
             logger.info("Loaded LightGCN model")
-        
+
         if os.path.exists(ngcf_path):
             MODEL_REGISTRY['ngcf'] = load_ngcf(ngcf_path)
             logger.info("Loaded NGCF model")
-            
+
     except Exception as e:
         logger.warning(f"Could not load models: {e}")
         logger.info("API will start without pre-loaded models")
@@ -144,10 +144,10 @@ async def health_check():
 async def list_models():
     """List available models and their metadata."""
     model_info = []
-    
+
     for name, model in MODEL_REGISTRY.items():
         n_params = sum(p.numel() for p in model.parameters())
-        
+
         info = ModelInfo(
             name=name,
             type=model.__class__.__name__,
@@ -157,7 +157,7 @@ async def list_models():
             parameters=n_params
         )
         model_info.append(info)
-    
+
     return model_info
 
 
@@ -165,45 +165,45 @@ async def list_models():
 async def recommend(request: RecommendationRequest):
     """
     Generate personalized recommendations for a user.
-    
+
     Args:
         request: Recommendation request with user_id and parameters
-        
+
     Returns:
         Recommendations with items and scores
     """
     start_time = time.time()
-    
+
     # Validate model
     if request.model_name not in MODEL_REGISTRY:
         raise HTTPException(
             status_code=404,
             detail=f"Model '{request.model_name}' not found. Available: {list(MODEL_REGISTRY.keys())}"
         )
-    
+
     model = MODEL_REGISTRY[request.model_name]
-    
+
     # Convert user_id to internal index (in production, use user mapping)
     try:
         user_idx = int(request.user_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid user_id format")
-    
+
     if user_idx < 0 or user_idx >= model.n_users:
         raise HTTPException(
             status_code=404,
             detail=f"User ID {user_idx} not found. Valid range: [0, {model.n_users-1}]"
         )
-    
+
     # Get adjacency matrix
     if request.model_name not in ADJACENCY_MATRICES:
         raise HTTPException(
             status_code=500,
             detail="Adjacency matrix not loaded for this model"
         )
-    
+
     adj_matrix = ADJACENCY_MATRICES[request.model_name]
-    
+
     # Generate recommendations
     try:
         seen_items = set()  # In production, load from database
@@ -214,15 +214,15 @@ async def recommend(request: RecommendationRequest):
             exclude_seen=request.exclude_seen,
             seen_items=seen_items
         )
-        
+
         # Format response
         recommendations = [
             {"item_id": int(item_id), "score": float(score)}
             for item_id, score in zip(item_ids, scores)
         ]
-        
+
         latency_ms = (time.time() - start_time) * 1000
-        
+
         return RecommendationResponse(
             user_id=request.user_id,
             recommendations=recommendations,
@@ -230,7 +230,7 @@ async def recommend(request: RecommendationRequest):
             timestamp=datetime.utcnow().isoformat(),
             latency_ms=latency_ms
         )
-        
+
     except Exception as e:
         logger.error(f"Recommendation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -243,33 +243,33 @@ async def batch_recommend(
 ):
     """
     Generate recommendations for multiple users.
-    
+
     For large batches, consider using async/background processing.
-    
+
     Args:
         request: Batch recommendation request
         background_tasks: FastAPI background tasks
-        
+
     Returns:
         Batch recommendations
     """
     start_time = time.time()
-    
+
     if request.model_name not in MODEL_REGISTRY:
         raise HTTPException(status_code=404, detail=f"Model not found")
-    
+
     model = MODEL_REGISTRY[request.model_name]
     adj_matrix = ADJACENCY_MATRICES.get(request.model_name)
-    
+
     if adj_matrix is None:
         raise HTTPException(status_code=500, detail="Model not properly initialized")
-    
+
     results = []
-    
+
     for user_id in request.user_ids:
         try:
             user_idx = int(user_id)
-            
+
             if user_idx < 0 or user_idx >= model.n_users:
                 results.append({
                     "user_id": user_id,
@@ -277,7 +277,7 @@ async def batch_recommend(
                     "recommendations": []
                 })
                 continue
-            
+
             item_ids, scores = model.recommend(
                 adj_matrix,
                 user_idx,
@@ -285,27 +285,27 @@ async def batch_recommend(
                 exclude_seen=True,
                 seen_items=set()
             )
-            
+
             recommendations = [
                 {"item_id": int(item_id), "score": float(score)}
                 for item_id, score in zip(item_ids, scores)
             ]
-            
+
             results.append({
                 "user_id": user_id,
                 "recommendations": recommendations,
                 "error": None
             })
-            
+
         except Exception as e:
             results.append({
                 "user_id": user_id,
                 "error": str(e),
                 "recommendations": []
             })
-    
+
     latency_ms = (time.time() - start_time) * 1000
-    
+
     return {
         "results": results,
         "total_users": len(request.user_ids),
@@ -324,12 +324,12 @@ async def load_model(
 ):
     """
     Load a new model into the registry.
-    
+
     Args:
         model_name: Name to register model under
         model_path: Path to model checkpoint
         model_type: Type of model (lightgcn or ngcf)
-        
+
     Returns:
         Success message
     """
@@ -340,16 +340,16 @@ async def load_model(
             model = load_ngcf(model_path)
         else:
             raise HTTPException(status_code=400, detail="Invalid model type")
-        
+
         MODEL_REGISTRY[model_name] = model
         logger.info(f"Loaded model '{model_name}' from {model_path}")
-        
+
         return {
             "status": "success",
             "message": f"Model '{model_name}' loaded successfully",
             "model_type": model_type
         }
-        
+
     except Exception as e:
         logger.error(f"Error loading model: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -359,7 +359,7 @@ async def load_model(
 async def get_metrics():
     """
     Get API metrics (for monitoring/observability).
-    
+
     In production, integrate with Prometheus, Datadog, etc.
     """
     return {
@@ -372,7 +372,7 @@ async def get_metrics():
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     uvicorn.run(
         app,
         host="0.0.0.0",

@@ -51,11 +51,11 @@ git push -u origin main
 Visit your repository at: https://github.com/ehxan139/graph-recommender-system
 
 You should see:
-- ✅ README.md with comprehensive documentation
-- ✅ Complete source code in src/
-- ✅ Deployment configurations
-- ✅ Requirements and dependencies
-- ✅ License and attribution
+- README.md with comprehensive documentation
+- Complete source code in src/
+- Deployment configurations
+- Requirements and dependencies
+- License and attribution
 
 ## Troubleshooting
 
@@ -88,6 +88,6 @@ git push -u origin main
 ---
 
 **Your portfolio now includes:**
-1. ✅ automotive-pricing-optimization
-2. ✅ neural-network-compression
-3. ✅ graph-recommender-system (ready to upload)
+1. automotive-pricing-optimization
+2. neural-network-compression
+3. graph-recommender-system (ready to upload)

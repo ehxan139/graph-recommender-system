@@ -213,4 +213,4 @@ trainer.fit(epochs=100)  # Train longer
 - **Documentation**: See README.md for comprehensive guide
 - **API Docs**: http://localhost:8000/docs (when server running)
 
-Happy recommending! 🚀
+Happy recommending!
